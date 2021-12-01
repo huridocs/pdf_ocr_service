@@ -1,9 +1,11 @@
 import json
 import os
 
+import logging
+import traceback
 import pymongo
 from fastapi import FastAPI, HTTPException, File, UploadFile
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, FileResponse
 import sys
 
 from ServiceConfig import ServiceConfig
@@ -63,6 +65,21 @@ async def extract_paragraphs(file: UploadFile = File(...)):
         raise HTTPException(status_code=422, detail=f'Error segmenting {filename}')
 
 
+@app.get('/processed_pdf/{tenant}/{pdf_file_name}', response_class=FileResponse)
+async def processed_pdf(tenant: str, pdf_file_name: str):
+    try:
+        return FileResponse(path=f'./docker_volume/processed_pdfs/{tenant}/{pdf_file_name}', media_type='application/pdf', filename=pdf_file_name)
+        # with open(f'./docker_volume/xml/{tenant}/{xml_file_name}', mode='r') as file:
+        #     content = file.read()
+        #     os.remove(f'./docker_volume/xml/{tenant}/{xml_file_name}')
+        #     return content
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail='No xml file')
+    except Exception as e:
+        logger.error('Error', exc_info=1)
+        raise HTTPException(status_code=422, detail="Exception message: {}".format(e))
+
+
 @app.get('/get_paragraphs/{tenant}/{pdf_file_name}')
 async def get_paragraphs(tenant: str, pdf_file_name: str):
     try:
@@ -87,7 +104,6 @@ async def get_paragraphs(tenant: str, pdf_file_name: str):
 async def get_xml(tenant: str, pdf_file_name: str):
     try:
         xml_file_name = '.'.join(pdf_file_name.split('.')[:-1]) + '.xml'
-
         with open(f'./docker_volume/xml/{tenant}/{xml_file_name}', mode='r') as file:
             content = file.read()
             os.remove(f'./docker_volume/xml/{tenant}/{xml_file_name}')
@@ -95,7 +111,7 @@ async def get_xml(tenant: str, pdf_file_name: str):
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail='No xml file')
     except Exception:
-        logger.error('Error', exc_info=1)
+        # logger.error('Error', exc_info=1)
         raise HTTPException(status_code=422, detail='An error has occurred. Check graylog for more info')
 
 

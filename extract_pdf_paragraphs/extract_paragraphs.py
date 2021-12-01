@@ -16,10 +16,10 @@ THIS_SCRIPT_PATH = pathlib.Path(__file__).parent.absolute()
 
 def get_paths(tenant: str, pdf_file_name: str):
     file_name = ''.join(pdf_file_name.split('.')[:-1])
-    pdf_file_path = f'{DOCKER_VOLUME}/to_extract/{tenant}/{pdf_file_name}'
-    xml_file_path = f'{DOCKER_VOLUME}/xml/{tenant}/{file_name}.xml'
-    failed_pdf_path = f'{DOCKER_VOLUME}/failed_pdf/{tenant}/{pdf_file_name}'
-    return pdf_file_path, xml_file_path, failed_pdf_path
+    source_pdf_filepath = f'{DOCKER_VOLUME}/source_pdfs/{tenant}/{pdf_file_name}'
+    processed_pdf_filepath = f'{DOCKER_VOLUME}/processed_pdfs/{tenant}/{file_name}.pdf'
+    failed_pdf_filepath = f'{DOCKER_VOLUME}/failed_pdfs/{tenant}/{pdf_file_name}'
+    return source_pdf_filepath, processed_pdf_filepath, failed_pdf_filepath
 
 
 def conversion_failed(xml_file_path, pdf_file_path, failed_pdf_path):

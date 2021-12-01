@@ -1,5 +1,6 @@
 from time import sleep
 
+import logging
 import pymongo
 import redis
 from pydantic import ValidationError
@@ -10,7 +11,7 @@ from ServiceConfig import ServiceConfig
 from data.ExtractionMessage import ExtractionMessage
 
 from data.Task import Task
-from extract_pdf_paragraphs.extract_paragraphs import extract_paragraphs
+from extract_pdf_paragraphs.extract_paragraphs import ocr_pdf
 
 
 class QueueProcessor:
@@ -35,9 +36,9 @@ class QueueProcessor:
         self.logger.error(f'Valid message: {message}')
 
         try:
-            extraction_data = extract_paragraphs(task)
+            processed_pdf_filepath = ocr_pdf(task)
 
-            if not extraction_data:
+            if not processed_pdf_filepath:
                 extraction_message = ExtractionMessage(tenant=task.tenant,
                                                        task=task.task,
                                                        params=task.params,
@@ -48,16 +49,14 @@ class QueueProcessor:
                 self.logger.error(extraction_message.json())
                 return True
 
-            results_url = f'{self.config.service_url}/get_paragraphs/{task.tenant}/{task.params.filename}'
-            file_results_url = f'{self.config.service_url}/get_xml/{task.tenant}/{task.params.filename}'
-            extraction_message = ExtractionMessage(tenant=extraction_data.tenant,
+            processed_pdf_url = f'{self.config.service_url}/processed_pdf/{task.tenant}/{task.params.filename}'
+            extraction_message = ExtractionMessage(tenant=task.tenant,
                                                    task=task.task,
                                                    params=task.params,
                                                    success=True,
-                                                   data_url=results_url,
-                                                   file_url=file_results_url)
+                                                   file_url=processed_pdf_url)
 
-            self.pdf_paragraph_db.paragraphs.insert_one(extraction_data.dict())
+            # self.pdf_paragraph_db.paragraphs.insert_one(extraction_data.dict())
             self.logger.info(extraction_message.json())
             self.results_queue.sendMessage(delay=3).message(extraction_message.dict()).execute()
             return True

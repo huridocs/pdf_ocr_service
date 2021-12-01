@@ -1,11 +1,13 @@
 import json
 import os
+import io
 import shutil
 import subprocess
 import time
 from unittest import TestCase
-
+import pdfplumber
 import requests
+import logging
 from rsmq import RedisSMQ
 
 from data.ExtractionData import ExtractionData
@@ -27,7 +29,7 @@ class TestEndToEnd(TestCase):
         docker_volume_path = f'{root_path}/docker_volume'
 
         tenant = 'end_to_end_test'
-        pdf_file_name = 'test.pdf'
+        pdf_file_name = 'source.pdf'
         service_url = 'http://localhost:5051'
 
         with open(f'{root_path}/test_files/{pdf_file_name}', 'rb') as stream:
@@ -43,48 +45,37 @@ class TestEndToEnd(TestCase):
 
         extraction_message = self.get_redis_message()
 
-        response = requests.get(extraction_message.data_url)
-
-        extraction_data_dict = json.loads(response.json())
-        extraction_data = ExtractionData(**extraction_data_dict)
-
-        self.assertEqual(tenant, extraction_message.tenant)
-        self.assertEqual(pdf_file_name, extraction_message.params.filename)
-        self.assertEqual(True, extraction_message.success)
-        self.assertEqual(200, response.status_code)
-        self.assertLess(15, len(extraction_data.paragraphs))
-        self.assertEqual(612, extraction_data.page_width)
-        self.assertEqual(792, extraction_data.page_height)
-        self.assertEqual('A/INF/76/1', extraction_data.paragraphs[0].text)
-        self.assertEqual({1, 2}, {x.page_number for x in extraction_data.paragraphs})
-
         response = requests.get(extraction_message.file_url)
         self.assertEqual(200, response.status_code)
-        self.assertTrue('<?xml version="1.0" encoding="UTF-8"?>' in str(response.content))
-        self.assertFalse(os.path.exists(f'{docker_volume_path}/xml/{tenant}/{pdf_file_name}'))
 
-        shutil.rmtree(f'{docker_volume_path}/xml/{tenant}', ignore_errors=True)
+        with pdfplumber.open(io.BytesIO(response.content)) as pdf:
+            first_page = pdf.pages[0]
+            self.assertEqual('Test  text  OCR', first_page.extract_text())
 
-        tenant = 'end_to_end_test_error'
-        pdf_file_name = 'README.md'
+        # self.assertFalse(os.path.exists(f'{docker_volume_path}/processed_pdfs/{tenant}/{pdf_file_name}'))
 
-        with open(f'{root_path}/README.md', 'rb') as stream:
-            files = {'file': stream}
-            requests.post(f"{service_url}/async_extraction/{tenant}", files=files)
+        # shutil.rmtree(f'{docker_volume_path}/xml/{tenant}', ignore_errors=True)
 
-        task = Task(tenant=tenant, task='segmentation', params=Params(filename=pdf_file_name))
+        # tenant = 'end_to_end_test_error'
+        # pdf_file_name = 'README.md'
 
-        queue.sendMessage().message(task.json()).execute()
+        # with open(f'{root_path}/README.md', 'rb') as stream:
+        #     files = {'file': stream}
+        #     requests.post(f"{service_url}/async_extraction/{tenant}", files=files)
 
-        extraction_message = self.get_redis_message()
+        # task = Task(tenant=tenant, task='segmentation', params=Params(filename=pdf_file_name))
 
-        self.assertEqual(tenant, extraction_message.tenant)
-        self.assertEqual('README.md', extraction_message.params.filename)
-        self.assertEqual(False, extraction_message.success)
-        self.assertTrue(os.path.exists(
-            f'{docker_volume_path}/failed_pdf/{extraction_message.tenant}/{extraction_message.params.filename}'))
+        # queue.sendMessage().message(task.json()).execute()
 
-        shutil.rmtree(f'{docker_volume_path}/failed_pdf/{tenant}', ignore_errors=True)
+        # extraction_message = self.get_redis_message()
+
+        # self.assertEqual(tenant, extraction_message.tenant)
+        # self.assertEqual('README.md', extraction_message.params.filename)
+        # self.assertEqual(False, extraction_message.success)
+        # self.assertTrue(os.path.exists(
+        #     f'{docker_volume_path}/failed_pdf/{extraction_message.tenant}/{extraction_message.params.filename}'))
+
+        # shutil.rmtree(f'{docker_volume_path}/failed_pdf/{tenant}', ignore_errors=True)
 
     @staticmethod
     def get_redis_message() -> ExtractionMessage:

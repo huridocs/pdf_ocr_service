@@ -9,6 +9,5 @@ class ExtractionMessage(BaseModel):
     params: Params
     success: bool
     error_message: str = None
-    data_url: str = None
     file_url: str = None
 
