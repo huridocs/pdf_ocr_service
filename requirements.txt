@@ -18,3 +18,4 @@ lightgbm~=3.2.1
 redis~=3.5.3
 aiofiles==0.6.0
 pdfplumber
+flake8

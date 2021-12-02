@@ -12,9 +12,11 @@ RUN apt-get update
 RUN apt-get install -y ocrmypdf
 
 RUN mkdir /app
+RUN mkdir /app/src
+RUN mkdir /data
 WORKDIR /app
 
-COPY . .
+COPY ./src ./src
+COPY docker-compose.yml .
 
-CMD python3 QueueProcessor.py
-
+CMD python3 ./src/QueueProcessor.py

@@ -11,8 +11,8 @@ config.py
 .env
 *_config.py
 config.yml
-docker_volume/*
-!docker_volume/README.md
+data/*
+!data/README.md
 db/*
 !db/README.md
 service.log

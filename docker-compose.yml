@@ -1,18 +1,21 @@
-version: '3'
+version: "3"
 services:
-  server:
+  api:
     init: true
+    # stdin_open: true
+    # tty: true
+    # command: /bin/bash
     build:
       context: .
-      dockerfile: Dockerfile_sever
+      dockerfile: Dockerfile_api
     ports:
       - "127.0.0.1:5051:5050"
     volumes:
-      - ./docker_volume:/app/docker_volume
-  extract_pdf_paragraphs:
+      - ./data:/app/data
+  ocr:
     init: true
     build:
       context: .
-      dockerfile: Dockerfile_extractor
+      dockerfile: Dockerfile_ocr
     volumes:
-      - ./docker_volume:/app/docker_volume
+      - ./data:/app/data

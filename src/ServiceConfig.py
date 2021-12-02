@@ -1,12 +1,13 @@
-import logging
 import os
+import logging
+
 from typing import Dict
 
 import graypy
 import yaml
 
 OPTIONS = ['redis_host', 'redis_port', 'service_host', 'service_port']
-SERVICE_NAME = 'segmentation'
+SERVICE_NAME = 'ocr'
 
 
 class ServiceConfig:
@@ -18,7 +19,7 @@ class ServiceConfig:
         self.config_from_yml: Dict[str, any] = dict()
         self.read_configuration_from_yml()
 
-        self.redis_host = self.get_parameter_from_yml('redis_host', 'redis_paragraphs')
+        self.redis_host = self.get_parameter_from_yml('redis_host', 'redis')
         self.redis_port = self.get_parameter_from_yml('redis_port', 6379)
 
         default_service_port = self.get_service_port()
@@ -49,7 +50,7 @@ class ServiceConfig:
         logger.setLevel(logging.INFO)
 
         if 'graylog_ip' not in self.config_from_yml or not self.config_from_yml['graylog_ip']:
-            logger.addHandler(logging.FileHandler(f'./docker_volume/{logger_name}.log'))
+            logger.addHandler(logging.FileHandler(f'../data/{logger_name}.log'))
             return logger
 
         handler = graypy.GELFUDPHandler(self.config_from_yml['graylog_ip'], 12201, localname="segmentation_server")
