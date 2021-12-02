@@ -8,7 +8,6 @@ from data.ExtractionData import ExtractionData
 from data.SegmentBox import SegmentBox
 from data.Task import Task
 from extract_pdf_paragraphs.PdfFeatures.PdfFeatures import PdfFeatures
-from segmentator.predict import predict
 
 ROOT_DIRECTORY = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 DOCKER_VOLUME = f'{ROOT_DIRECTORY}/docker_volume'
@@ -59,23 +58,10 @@ def remove_xml_metadata(xml_file_path):
     shutil.rmtree(file_xml_data_path, ignore_errors=True)
 
 
-def extract_paragraphs(task: Task):
-    pdf_file_path, xml_file_path, failed_pdf_path = get_paths(task.tenant, task.params.filename)
+def ocr_pdf(task: Task):
+    source_pdf_filepath, processed_pdf_filepath, failed_pdf_filepath = get_paths(task.tenant, task.params.filename)
+    os.makedirs('/'.join(processed_pdf_filepath.split('/')[:-1]), exist_ok=True)
+    subprocess.run(['ocrmypdf', source_pdf_filepath, processed_pdf_filepath])
 
-    if not convert_to_xml(pdf_file_path, xml_file_path, failed_pdf_path):
-        return None
-
-    pdf_features = PdfFeatures.from_pdfalto(xml_file_path)
-    pdf_segments = predict(pdf_features)
-    segments = [SegmentBox.from_pdf_segment(x) for x in pdf_segments]
-
-    extraction_data = ExtractionData(tenant=task.tenant,
-                                     file_name=task.params.filename,
-                                     paragraphs=segments,
-                                     page_width=pdf_features.pages[0].page_width if pdf_features.pages else 0,
-                                     page_height=pdf_features.pages[0].page_height if pdf_features.pages else 0)
-
-    if os.path.exists(pdf_file_path):
-        os.remove(pdf_file_path)
-
-    return extraction_data
+    # shutil.copyfile(source_pdf_filepath, processed_pdf_filepath)
+    return processed_pdf_filepath

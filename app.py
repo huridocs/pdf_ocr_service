@@ -9,8 +9,6 @@ import sys
 from ServiceConfig import ServiceConfig
 from data.SegmentBox import SegmentBox
 from extract_pdf_paragraphs.PdfFeatures.PdfFeatures import PdfFeatures
-from extract_pdf_paragraphs.pdfalto.PdfAltoXml import get_xml_tags_from_file_content
-from extract_pdf_paragraphs.segmentator.predict import predict
 from data.ExtractionData import ExtractionData
 from pdf_file.PdfFile import PdfFile
 
@@ -51,14 +49,15 @@ async def async_extraction(tenant, file: UploadFile = File(...)):
 async def extract_paragraphs(file: UploadFile = File(...)):
     filename = '"No file name! Probably an error about the file in the request"'
     try:
-        filename = file.filename
-        xml_tags = get_xml_tags_from_file_content(file.file.read())
-        pdf_features = PdfFeatures.from_xml_content(xml_tags)
-        pdf_segments = predict(pdf_features)
-        paragraphs = [SegmentBox.from_pdf_segment(x).dict() for x in pdf_segments]
-        return json.dumps({'page_width': pdf_features.pages[0].page_width,
-                           'page_height': pdf_features.pages[0].page_height,
-                           'paragraphs': paragraphs})
+        return 'root!'
+        # filename = file.filename
+        # xml_tags = get_xml_tags_from_file_content(file.file.read())
+        # pdf_features = PdfFeatures.from_xml_content(xml_tags)
+        # pdf_segments = predict(pdf_features)
+        # paragraphs = [SegmentBox.from_pdf_segment(x).dict() for x in pdf_segments]
+        # return json.dumps({'page_width': pdf_features.pages[0].page_width,
+        #                    'page_height': pdf_features.pages[0].page_height,
+        #                    'paragraphs': paragraphs})
     except Exception:
         logger.error(f'Error segmenting {filename}', exc_info=1)
         raise HTTPException(status_code=422, detail=f'Error segmenting {filename}')

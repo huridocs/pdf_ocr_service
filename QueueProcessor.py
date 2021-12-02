@@ -18,8 +18,8 @@ class QueueProcessor:
         self.config = ServiceConfig()
         self.logger = self.config.get_logger('redis_tasks')
 
-        client = pymongo.MongoClient('mongodb://mongo_paragraphs:27017')
-        self.pdf_paragraph_db = client['pdf_paragraph']
+        # client = pymongo.MongoClient('mongodb://mongo_paragraphs:27017')
+        # self.pdf_paragraph_db = client['pdf_paragraph']
 
         self.results_queue = RedisSMQ(host=self.config.redis_host,
                                       port=self.config.redis_port,

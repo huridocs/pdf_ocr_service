@@ -1,6 +1,7 @@
 version: '3'
 services:
   server:
+    init: true
     build:
       context: .
       dockerfile: Dockerfile_sever
@@ -11,16 +12,17 @@ services:
     depends_on:
       - mongo_paragraphs
   extract_pdf_paragraphs:
+    init: true
     build:
       context: .
       dockerfile: Dockerfile_extractor
     volumes:
       - ./docker_volume:/app/docker_volume
-    depends_on:
-      - mongo_paragraphs
-  mongo_paragraphs:
-    image: "mongo:4.0.1"
-    volumes:
-      - ./db:/data/db
-    ports:
-      - '127.0.0.1:29017-29019:27017-27019'
+    # depends_on:
+      # - mongo_paragraphs
+  # mongo_paragraphs:
+  #   image: "mongo:4.0.1"
+  #   volumes:
+  #     - ./db:/data/db
+  #   ports:
+  #     - '127.0.0.1:29017-29019:27017-27019'
