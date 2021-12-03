@@ -5,6 +5,8 @@
 <!-- - cleanup automaitcally for each tests -->
 
 - do not use tenants, WTF ?
+- autoformatter
+<!-- - review test files: do we want to include the "processed.pdf" in the commit? -->
 - change names of packages if pertinent
 <!-- - combine docker-compose files (prod and testing) if possible -->
 - divide dependencies into prod and dev requirements files
