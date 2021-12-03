@@ -60,7 +60,11 @@ async def upload_pdf(namespace, file: UploadFile = File(...)):
 @app.get('/processed_pdf/{namespace}/{pdf_file_name}', response_class=FileResponse)
 async def processed_pdf(namespace: str, pdf_file_name: str):
     try:
-        return FileResponse(path=f'../data/processed_pdfs/{namespace}/{pdf_file_name}', media_type='application/pdf', filename=pdf_file_name)
+        return FileResponse(
+            path=f'{config.paths["processed_pdfs"]}/{namespace}/{pdf_file_name}',
+            media_type='application/pdf',
+            filename=pdf_file_name
+            )
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail='No processed file found')
     except Exception:

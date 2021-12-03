@@ -1,6 +1,9 @@
 import os
 import pathlib
 from pathlib import Path
+from ServiceConfig import ServiceConfig
+
+config = ServiceConfig()
 
 
 class PdfFile:
@@ -10,13 +13,13 @@ class PdfFile:
         self.namespace = namespace
 
     def save(self, pdf_file_name: str, file: bytes):
-        if not os.path.exists(f'{self.root_folder}/../data/source_pdfs'):
-            os.mkdir(f'{self.root_folder}/../data/source_pdfs')
+        if not os.path.exists(config.paths["source_pdfs"]):
+            os.mkdir(config.paths["source_pdfs"])
 
-        if not os.path.exists(f'{self.root_folder}/../data/source_pdfs/{self.namespace}'):
-            os.mkdir(f'{self.root_folder}/../data/source_pdfs/{self.namespace}')
+        if not os.path.exists(f'{config.paths["source_pdfs"]}/{self.namespace}'):
+            os.mkdir(f'{config.paths["source_pdfs"]}/{self.namespace}')
 
-        path = f'{self.root_folder}/../data/source_pdfs/{self.namespace}/{pdf_file_name}'
+        path = f'{config.paths["source_pdfs"]}/{self.namespace}/{pdf_file_name}'
 
         file_path_pdf = pathlib.Path(path)
         file_path_pdf.write_bytes(file)

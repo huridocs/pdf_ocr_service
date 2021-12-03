@@ -1,19 +1,32 @@
 import os
 import logging
-
-from typing import Dict
-
 import graypy
 import yaml
 
+from pathlib import Path
+from typing import Dict
+
+
 OPTIONS = ['redis_host', 'redis_port', 'service_host', 'service_port']
 SERVICE_NAME = 'ocr'
+
+
+APP_PATH = Path(__file__).parent.absolute()
+DATA_PATH = f'{APP_PATH}/../data'
+PDF_SOURCES_PATH = f'{DATA_PATH}/source_pdfs'
+PDF_PROCESSED_PATH = f'{DATA_PATH}/processed_pdfs'
 
 
 class ServiceConfig:
     def __init__(self):
         self.tasks_queue_name = SERVICE_NAME + '_tasks'
         self.results_queue_name = SERVICE_NAME + '_results'
+        self.paths: Dict[str, str] = dict({
+          'app': APP_PATH,
+          'data': DATA_PATH,
+          'source_pdfs': PDF_SOURCES_PATH,
+          'processed_pdfs': PDF_PROCESSED_PATH
+          })
 
         self.config_path = 'config.yml'
         self.config_from_yml: Dict[str, any] = dict()
