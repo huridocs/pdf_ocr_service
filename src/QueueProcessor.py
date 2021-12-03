@@ -38,7 +38,7 @@ class QueueProcessor:
                                                        task=task.task,
                                                        params=task.params,
                                                        success=False,
-                                                       error_message='Error getting the xml from the pdf')
+                                                       error_message='Error during pdf ocr')
 
                 self.results_queue.sendMessage().message(extraction_message.dict()).execute()
                 self.logger.error(extraction_message.json())
