@@ -1,9 +1,9 @@
 ## TODOS
 
 <!-- - all source code into src/ ? -->
-
-- linter !
+<!-- - linter ! -->
 <!-- - cleanup automaitcally for each tests -->
+
 - do not use tenants, WTF ?
 - change names of packages if pertinent
 <!-- - combine docker-compose files (prod and testing) if possible -->
