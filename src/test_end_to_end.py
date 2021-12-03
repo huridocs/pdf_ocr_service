@@ -20,13 +20,12 @@ class TestEndToEnd(TestCase):
         shutil.rmtree('../data/failed_pdfs', ignore_errors=True)
 
     def setUpClass():
-        subprocess.run('docker-compose -f ../docker-compose.yml -f ../docker-compose-dev.yml build --force-rm', shell=True)
-        subprocess.run('docker-compose -f ../docker-compose.yml -f ../docker-compose-dev.yml up -d', shell=True)
+        subprocess.run('docker-compose --profile testing up -d --build', shell=True)
         time.sleep(5)
 
     def tearDownClass():
-        subprocess.run('docker-compose -f ../docker-compose.yml -f ../docker-compose-dev.yml down', shell=True)
-        subprocess.run('docker-compose -f ../docker-compose.yml -f ../docker-compose-dev.yml rm -f', shell=True)
+        subprocess.run('docker-compose --profile testing down', shell=True)
+        subprocess.run('docker-compose --profile testing rm', shell=True)
 
     def test_sync_ocr(self):
         root_path = '.'

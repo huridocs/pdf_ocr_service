@@ -2,12 +2,10 @@ version: "3"
 services:
   api:
     init: true
-    # stdin_open: true
-    # tty: true
-    # command: /bin/bash
     build:
       context: .
-      dockerfile: Dockerfile_api
+      dockerfile: Dockerfile
+      target: api
     ports:
       - "127.0.0.1:5051:5050"
     volumes:
@@ -16,6 +14,17 @@ services:
     init: true
     build:
       context: .
-      dockerfile: Dockerfile_ocr
+      dockerfile: Dockerfile
+      target: ocr
     volumes:
       - ./data:/app/data
+
+  redis:
+    image: "redis:5.0.14"
+    command: redis-server
+    ports:
+      - "6479:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    profiles:
+      - testing
