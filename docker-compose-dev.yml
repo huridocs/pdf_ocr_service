@@ -1,0 +1,9 @@
+version: '3'
+services:
+  redis_paragraphs:
+    image: "redis:5.0.14"
+    command: redis-server
+    ports:
+      - "6479:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master

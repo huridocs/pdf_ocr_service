@@ -9,8 +9,6 @@ services:
       - "127.0.0.1:5051:5050"
     volumes:
       - ./docker_volume:/app/docker_volume
-    depends_on:
-      - mongo_paragraphs
   extract_pdf_paragraphs:
     init: true
     build:
@@ -18,11 +16,3 @@ services:
       dockerfile: Dockerfile_extractor
     volumes:
       - ./docker_volume:/app/docker_volume
-    # depends_on:
-      # - mongo_paragraphs
-  # mongo_paragraphs:
-  #   image: "mongo:4.0.1"
-  #   volumes:
-  #     - ./db:/data/db
-  #   ports:
-  #     - '127.0.0.1:29017-29019:27017-27019'

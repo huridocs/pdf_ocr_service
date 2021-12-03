@@ -18,11 +18,19 @@ from data.Task import Task
 
 class TestEndToEnd(TestCase):
     def setUp(self):
-        subprocess.run('docker-compose -f docker-compose-service-with-redis.yml up  -d --build', shell=True)
+        shutil.rmtree('docker_volume/source_pdfs', ignore_errors=True)
+        shutil.rmtree('docker_volume/processed_pdfs', ignore_errors=True)
+        shutil.rmtree('docker_volume/failed_pdfs', ignore_errors=True)
+
+    def setUpClass():
+        # subprocess.run('docker-compose -f docker-compose-service-with-redis.yml up  -d --build', shell=True)
+        subprocess.run('docker-compose -f docker-compose.yml -f docker-compose-dev.yml build --force-rm', shell=True)
+        subprocess.run('docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d', shell=True)
         time.sleep(5)
 
-    def tearDown(self):
-        subprocess.run('docker-compose -f docker-compose-service-with-redis.yml down', shell=True)
+    def tearDownClass():
+        subprocess.run('docker-compose -f docker-compose.yml -f docker-compose-dev.yml down', shell=True)
+        subprocess.run('docker-compose -f docker-compose.yml -f docker-compose-dev.yml rm -f', shell=True)
 
     def test_end_to_end(self):
         root_path = '.'
@@ -81,7 +89,7 @@ class TestEndToEnd(TestCase):
     def get_redis_message() -> ExtractionMessage:
         queue = RedisSMQ(host='127.0.0.1',
                          port='6479',
-                         qname='segmentation_results',
+                         qname='ocr_results',
                          quiet=True)
 
         for i in range(10):
