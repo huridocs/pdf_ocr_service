@@ -6,7 +6,7 @@
 *.log
 nohup.out
 config.py
-/venv/
+/ocr-service-venv/
 *.cache
 .env
 *_config.py
