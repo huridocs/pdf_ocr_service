@@ -167,14 +167,13 @@ To use a graylog server, create a file `config.yml` with the following content:
 
 It works with Python 3.9 [install] (https://runnable.com/docker/getting-started/)
 
-    pip3 install virtualenv
-    virtualenv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
+    ./run setup_venv
 
 ## Execute tests
 
-    python -m unittest
+    ./run test
+
+    to get more help on ./run commands just type ./run
 
 ## Troubleshooting
 

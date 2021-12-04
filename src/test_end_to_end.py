@@ -11,7 +11,9 @@ from rsmq import RedisSMQ
 from ExtractionMessage import ExtractionMessage
 from Params import Params
 from Task import Task
+from ServiceConfig import ServiceConfig
 
+config = ServiceConfig()
 
 class TestEndToEnd(TestCase):
     def setUp(self):
@@ -28,11 +30,10 @@ class TestEndToEnd(TestCase):
         subprocess.run('docker-compose --profile testing rm', shell=True)
 
     def test_sync_ocr(self):
-        root_path = '.'
         pdf_file_name = 'source.pdf'
         service_url = 'http://localhost:5051'
 
-        with open(f'{root_path}/test_files/{pdf_file_name}', 'rb') as stream:
+        with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', 'rb') as stream:
             files = {'file': stream}
             response = requests.post(f"{service_url}", files=files)
 
@@ -49,7 +50,7 @@ class TestEndToEnd(TestCase):
         pdf_file_name = 'source.pdf'
         service_url = 'http://localhost:5051'
 
-        with open(f'{root_path}/test_files/{pdf_file_name}', 'rb') as stream:
+        with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', 'rb') as stream:
             files = {'file': stream}
             requests.post(f"{service_url}/upload/{namespace}", files=files)
 

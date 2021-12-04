@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -eo pipefail
+
+function _source_venv {
+  {
+    source ocr-service-venv/bin/activate 2>&1
+  } || {
+    printf '\e[31m\n%s\n\n\e[0m' 'Venv does not exist, create it running ./run install_venv'
+    exit 1
+  }
+}
+
+function install_venv {
+  python3 -m venv ocr-service-venv
+  source ocr-service-venv/bin/activate
+  python3 -m pip install --upgrade pip
+  python3 -m pip install -r requirements.txt
+  printf '\e[33m\n%s\n\n\e[0m' '"source ./ocr-service-venv/bin/activate" to activate venv (only needed if not running commands from the run script)'
+}
+
+function formatter {
+  _source_venv
+  # Format Python code with black
+  command black .
+}
+
+function check_format {
+  _source_venv
+  # Format Python code with black
+  command black . --check
+}
+
+function test {
+  _source_venv
+  python -m unittest discover -s src
+}
+
+function linter {
+  _source_venv
+  command flake8
+}
+
+function help {
+  printf "%s <task> \n\nTasks:\n" "${0}"
+  compgen -A function | grep -v "^_" | cat -n
+}
+
+TIMEFORMAT=$'\nTask completed in %3lR'
+time "${@:-help}"

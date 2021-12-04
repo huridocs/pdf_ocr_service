@@ -12,3 +12,4 @@ uvicorn
 
 flake8
 pdfplumber
+black
