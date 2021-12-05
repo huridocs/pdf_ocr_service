@@ -10,6 +10,8 @@ RUN pip install -r requirements.txt
 
 RUN apt-get update
 RUN apt-get install -y ocrmypdf
+RUN apt-get install -y tesseract-ocr-fra
+RUN apt-get install -y tesseract-ocr-spa
 
 RUN mkdir /app
 RUN mkdir /app/src

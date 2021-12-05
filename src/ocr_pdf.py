@@ -11,6 +11,11 @@ config = ServiceConfig()
 THIS_SCRIPT_PATH = pathlib.Path(__file__).parent.absolute()
 DATA_PATH = f'{THIS_SCRIPT_PATH}/../data'
 
+iso_to_tesseract_languages = {
+        "en": "eng",
+        "fr": "fra",
+        "es": "spa"
+        }
 
 def get_paths(namespace: str, pdf_file_name: str):
     file_name = ''.join(pdf_file_name.split('.')[:-1])
@@ -20,10 +25,10 @@ def get_paths(namespace: str, pdf_file_name: str):
     return source_pdf_filepath, processed_pdf_filepath, failed_pdf_filepath
 
 
-def ocr_pdf(filename, namespace):
+def ocr_pdf(filename, namespace, language = 'en'):
     source_pdf_filepath, processed_pdf_filepath, failed_pdf_filepath = get_paths(namespace, filename)
     os.makedirs('/'.join(processed_pdf_filepath.split('/')[:-1]), exist_ok=True)
-    result = subprocess.run(['ocrmypdf', source_pdf_filepath, processed_pdf_filepath])
+    result = subprocess.run(['ocrmypdf', '-l', iso_to_tesseract_languages[language], source_pdf_filepath, processed_pdf_filepath])
 
     if result.returncode == 0:
         return processed_pdf_filepath

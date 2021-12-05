@@ -31,7 +31,7 @@ class QueueProcessor:
         self.logger.error(f'Valid message: {message}')
 
         try:
-            processed_pdf_filepath = ocr_pdf(task.params.filename, task.tenant)
+            processed_pdf_filepath = ocr_pdf(task.params.filename, task.tenant, task.params.language)
 
             if not processed_pdf_filepath:
                 extraction_message = ExtractionMessage(tenant=task.tenant,

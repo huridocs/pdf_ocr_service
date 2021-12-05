@@ -8,16 +8,19 @@
 <!-- - combine docker-compose files (prod and testing) if possible -->
 <!-- - change names of packages if pertinent -->
 
-- update README!!!!
+<!-- - error handling -->
+<!-- - check passing parameters for OCRing, specicially language -->
+<!-- - rename venv to something meaningfull, ocr-pdf-service-venv ? -->
+<!-- - use config paths instead of repeating everywhere strings -->
+
+- test with language for sync endpoint !!
 - test with a wider variety of PDFs
-- error handling
-- check passing parameters for OCRing, specicially language
+- update README!!!!
+- info endpoint respond with languages available
 - autoformatter
 - divide dependencies into prod and dev requirements files
 - review which requirements are really required
-- rename venv to something meaningfull, ocr-pdf-service-venv ?
 - why still docker_volumes has xml dir ?
-- use config paths instead of repeating everywhere strings
 - setup_venv needs to stop on error to avoid insalling local packages
 - Check this warnings on docker-compose up:
   ocr_1 | QueueAlreadyExists: Exception while processing CreateQueueCommand: Queue 'ocr_results' already exists
