@@ -1,3 +1,4 @@
+import os
 import json
 import io
 import shutil
@@ -17,9 +18,9 @@ config = ServiceConfig()
 
 class TestEndToEnd(TestCase):
     def setUp(self):
-        shutil.rmtree('../data/source_pdfs', ignore_errors=True)
-        shutil.rmtree('../data/processed_pdfs', ignore_errors=True)
-        shutil.rmtree('../data/failed_pdfs', ignore_errors=True)
+        shutil.rmtree(config.paths['source_pdfs'], ignore_errors=True)
+        shutil.rmtree(config.paths['processed_pdfs'], ignore_errors=True)
+        shutil.rmtree(config.paths['failed_pdfs'], ignore_errors=True)
 
     def setUpClass():
         subprocess.run('docker-compose --profile testing up -d --build', shell=True)
@@ -70,30 +71,27 @@ class TestEndToEnd(TestCase):
             first_page = pdf.pages[0]
             self.assertEqual('Test  text  OCR', first_page.extract_text())
 
-        # self.assertFalse(os.path.exists(f'{data_path}/processed_pdfs/{namespace}/{pdf_file_name}'))
+    def test_async_ocr_error_handling(self):
+        namespace = 'end_to_end_test_error'
+        pdf_file_name = 'README.md'
+        service_url = 'http://localhost:5051'
 
-        # shutil.rmtree(f'{data_path}/xml/{tenant}', ignore_errors=True)
+        with open(f'{config.paths["app"]}/../README.md', 'rb') as stream:
+            files = {'file': stream}
+            requests.post(f"{service_url}/upload/{namespace}", files=files)
 
-        # tenant = 'end_to_end_test_error'
-        # pdf_file_name = 'README.md'
+        queue = RedisSMQ(host='127.0.0.1', port='6479', qname="ocr_tasks")
+        task = Task(tenant=namespace, task='ocr', params=Params(filename=pdf_file_name))
 
-        # with open(f'{root_path}/README.md', 'rb') as stream:
-        #     files = {'file': stream}
-        #     requests.post(f"{service_url}/async_extraction/{tenant}", files=files)
+        queue.sendMessage().message(task.json()).execute()
 
-        # task = Task(tenant=tenant, task='segmentation', params=Params(filename=pdf_file_name))
+        extraction_message = self.get_redis_message()
 
-        # queue.sendMessage().message(task.json()).execute()
-
-        # extraction_message = self.get_redis_message()
-
-        # self.assertEqual(tenant, extraction_message.tenant)
-        # self.assertEqual('README.md', extraction_message.params.filename)
-        # self.assertEqual(False, extraction_message.success)
-        # self.assertTrue(os.path.exists(
-        #     f'{data_path}/failed_pdf/{extraction_message.tenant}/{extraction_message.params.filename}'))
-
-        # shutil.rmtree(f'{data_path}/failed_pdf/{tenant}', ignore_errors=True)
+        self.assertEqual(namespace, extraction_message.tenant)
+        self.assertEqual('README.md', extraction_message.params.filename)
+        self.assertEqual(False, extraction_message.success)
+        self.assertTrue(os.path.exists(
+            f'{config.paths["failed_pdfs"]}/{extraction_message.tenant}/{extraction_message.params.filename}'))
 
     @staticmethod
     def get_redis_message() -> ExtractionMessage:

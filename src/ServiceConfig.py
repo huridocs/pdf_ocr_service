@@ -15,6 +15,7 @@ APP_PATH = Path(__file__).parent.absolute()
 DATA_PATH = f'{APP_PATH}/../data'
 PDF_SOURCES_PATH = f'{DATA_PATH}/source_pdfs'
 PDF_PROCESSED_PATH = f'{DATA_PATH}/processed_pdfs'
+PDF_FAILED = f'{DATA_PATH}/failed_pdfs'
 
 
 class ServiceConfig:
@@ -25,7 +26,8 @@ class ServiceConfig:
           'app': APP_PATH,
           'data': DATA_PATH,
           'source_pdfs': PDF_SOURCES_PATH,
-          'processed_pdfs': PDF_PROCESSED_PATH
+          'processed_pdfs': PDF_PROCESSED_PATH,
+          'failed_pdfs': PDF_FAILED
           })
 
         self.config_path = 'config.yml'
