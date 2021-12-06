@@ -12,8 +12,10 @@
 <!-- - check passing parameters for OCRing, specicially language -->
 <!-- - rename venv to something meaningfull, ocr-pdf-service-venv ? -->
 <!-- - use config paths instead of repeating everywhere strings -->
+<!-- - test with language for sync endpoint !! -->
 
-- test with language for sync endpoint !!
+- abstract somehow language support
+- decide which languages to support
 - test with a wider variety of PDFs
 - update README!!!!
 - info endpoint respond with languages available
