@@ -3,11 +3,14 @@ import logging
 
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from typing import Optional
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
+import subprocess
 
 from ServiceConfig import ServiceConfig
 from PdfFile import PdfFile
 from ocr_pdf import ocr_pdf
+from fastapi.encoders import jsonable_encoder
+from languages import supported_languages
 
 config = ServiceConfig()
 logger = config.get_logger('service')
@@ -20,13 +23,14 @@ logger.info('Ocr PDF service has started')
 @app.get('/info')
 async def info():
     logger.info('Ocr PDF info endpoint')
-    return sys.version
 
-
-# @app.get('/error')
-# async def error():
-#     logger.error("This is a test error from the error endpoint")
-#     raise HTTPException(status_code=500, detail='This is a test error from the error endpoint')
+    content = jsonable_encoder({
+            "sys": sys.version,
+            "tesseract_version": subprocess.run("tesseract --version", shell=True, text=True, capture_output=True).stdout,
+            "ocrmypdf_version": subprocess.run("ocrmypdf --version", shell=True, text=True, capture_output=True).stdout,
+            "supported_languages": supported_languages()
+            })
+    return JSONResponse(content=content)
 
 
 @app.post('/')

@@ -49,15 +49,23 @@ function remove_docker_images {
   docker-compose config --images | xargs docker rmi
 }
 
+function start {
+if [ -z "$(docker ps -q --no-trunc | grep "$(docker-compose ps -q ocr)")" ]; then
+    docker-compose up --build "${@}"
+  else
+    echo "Containers already running"
+  fi
+}
+
 function start:testing {
 if [ -z "$(docker ps -q --no-trunc | grep "$(docker-compose ps -q ocr)")" ]; then
     docker-compose --profile testing up --build "${@}"
   else
-    echo "Testing containers already running"
+    echo "Containers already running"
   fi
 }
 
-function stop:testing {
+function stop {
   docker-compose --profile testing stop
 }
 

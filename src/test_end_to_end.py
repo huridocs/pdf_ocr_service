@@ -28,7 +28,7 @@ class TestEndToEnd(TestCase):
         time.sleep(1)
 
     def tearDownClass():
-        subprocess.run('./run stop:testing', shell=True)
+        subprocess.run('./run stop', shell=True)
 
     def test_sync_ocr(self):
         ocr_text = self.sync_ocr('sample-english.pdf')
