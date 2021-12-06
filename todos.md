@@ -7,7 +7,6 @@
 <!-- - review test files: do we want to include the "processed.pdf" in the commit? -->
 <!-- - combine docker-compose files (prod and testing) if possible -->
 <!-- - change names of packages if pertinent -->
-
 <!-- - error handling -->
 <!-- - check passing parameters for OCRing, specicially language -->
 <!-- - rename venv to something meaningfull, ocr-pdf-service-venv ? -->
@@ -15,14 +14,19 @@
 <!-- - test with language for sync endpoint !! -->
 <!-- - autoformatter -->
 <!-- - info endpoint respond with languages available -->
+<!-- - update README!!!! -->
+<!-- - why still docker_volumes has xml dir ? -->
+<!-- - abstract somehow language support -->
 
-- abstract somehow language support
+- setup github CI with lint, formatting, tests ...
+- setup production environment with auto restart ?
+- make sure logs work
+- config logs path to be able to use /var/logs on production ?
+- make sure works on mac
 - decide which languages to support
 - test with a wider variety of PDFs
-- update README!!!!
 - divide dependencies into prod and dev requirements files
 - review which requirements are really required
-- why still docker_volumes has xml dir ?
 - setup_venv needs to stop on error to avoid insalling local packages
 - Check this warnings on docker-compose up:
   ocr_1 | QueueAlreadyExists: Exception while processing CreateQueueCommand: Queue 'ocr_results' already exists
