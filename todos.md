@@ -14,12 +14,12 @@
 <!-- - use config paths instead of repeating everywhere strings -->
 <!-- - test with language for sync endpoint !! -->
 <!-- - autoformatter -->
+<!-- - info endpoint respond with languages available -->
 
 - abstract somehow language support
 - decide which languages to support
 - test with a wider variety of PDFs
 - update README!!!!
-- info endpoint respond with languages available
 - divide dependencies into prod and dev requirements files
 - review which requirements are really required
 - why still docker_volumes has xml dir ?
