@@ -65,7 +65,7 @@ class ServiceConfig:
         logger.setLevel(logging.INFO)
 
         if 'graylog_ip' not in self.config_from_yml or not self.config_from_yml['graylog_ip']:
-            logger.addHandler(logging.FileHandler(f'../data/{logger_name}.log'))
+            logger.addHandler(logging.FileHandler(f'{self.paths["data"]}/{logger_name}.log'))
             return logger
 
         handler = graypy.GELFUDPHandler(self.config_from_yml['graylog_ip'], 12201, localname="segmentation_server")

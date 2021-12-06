@@ -2,6 +2,7 @@ import os
 import json
 import io
 import shutil
+import logging
 import subprocess
 import time
 from unittest import TestCase
@@ -23,80 +24,27 @@ class TestEndToEnd(TestCase):
         shutil.rmtree(config.paths['failed_pdfs'], ignore_errors=True)
 
     def setUpClass():
-        subprocess.run('docker-compose --profile testing up -d --wait --build', shell=True)
+        subprocess.run('./run start:testing -d --wait', shell=True)
         time.sleep(1)
 
     def tearDownClass():
-        subprocess.run('docker-compose --profile testing down', shell=True)
-        subprocess.run('docker-compose --profile testing rm', shell=True)
+        subprocess.run('./run stop:testing', shell=True)
 
     def test_sync_ocr(self):
-        pdf_file_name = 'source.pdf'
-        service_url = 'http://localhost:5051'
+        ocr_text = self.sync_ocr('sample-english.pdf')
+        self.assertEqual('Test  text  OCR', ocr_text)
 
-        with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', 'rb') as stream:
-            files = {'file': stream}
-            response = requests.post(f"{service_url}", files=files)
-
-        self.assertEqual(200, response.status_code)
-
-        with pdfplumber.open(io.BytesIO(response.content)) as pdf:
-            first_page = pdf.pages[0]
-            self.assertEqual('Test  text  OCR', first_page.extract_text())
+    def test_sync_ocr_specific_language(self):
+        ocr_text = self.sync_ocr('sample-french.pdf', language='fr')
+        self.assertEqual("Où  puis-je  m'en  procurer", ocr_text)
 
     def test_async_ocr(self):
-        root_path = '.'
-
-        namespace = 'end_to_end_test'
-        pdf_file_name = 'source.pdf'
-        service_url = 'http://localhost:5051'
-
-        with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', 'rb') as stream:
-            files = {'file': stream}
-            requests.post(f"{service_url}/upload/{namespace}", files=files)
-
-        queue = RedisSMQ(host='127.0.0.1', port='6479', qname="ocr_tasks")
-
-        queue.sendMessage().message('{"message_to_avoid":"to_be_written_in_log_file"}').execute()
-
-        task = Task(tenant=namespace, task='ocr', params=Params(filename=pdf_file_name))
-        queue.sendMessage().message(str(task.json())).execute()
-
-        extraction_message = self.get_redis_message()
-
-        response = requests.get(extraction_message.file_url)
-        self.assertEqual(200, response.status_code)
-
-        with pdfplumber.open(io.BytesIO(response.content)) as pdf:
-            first_page = pdf.pages[0]
-            self.assertEqual('Test  text  OCR', first_page.extract_text())
+        ocr_text = self.async_ocr('sample-english.pdf')
+        self.assertEqual("Test  text  OCR", ocr_text)
 
     def test_async_ocr_specific_language(self):
-        root_path = '.'
-
-        namespace = 'end_to_end'
-        pdf_file_name = 'sample-french.pdf'
-        service_url = 'http://localhost:5051'
-
-        with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', 'rb') as stream:
-            files = {'file': stream}
-            requests.post(f"{service_url}/upload/{namespace}", files=files)
-
-        queue = RedisSMQ(host='127.0.0.1', port='6479', qname="ocr_tasks")
-
-        queue.sendMessage().message('{"message_to_avoid":"to_be_written_in_log_file"}').execute()
-
-        task = Task(tenant=namespace, task='ocr', params=Params(filename=pdf_file_name, language='fr'))
-        queue.sendMessage().message(str(task.json())).execute()
-
-        extraction_message = self.get_redis_message()
-
-        response = requests.get(extraction_message.file_url)
-        self.assertEqual(200, response.status_code)
-
-        with pdfplumber.open(io.BytesIO(response.content)) as pdf:
-            first_page = pdf.pages[0]
-            self.assertEqual("Où  puis-je  m'en  procurer", first_page.extract_text())
+        ocr_text = self.async_ocr('sample-french.pdf', language='fr')
+        self.assertEqual("Où  puis-je  m'en  procurer", ocr_text)
 
     def test_async_ocr_error_handling(self):
         namespace = 'end_to_end_test_error'
@@ -119,6 +67,44 @@ class TestEndToEnd(TestCase):
         self.assertEqual(False, extraction_message.success)
         self.assertTrue(os.path.exists(
             f'{config.paths["failed_pdfs"]}/{extraction_message.tenant}/{extraction_message.params.filename}'))
+
+    def sync_ocr(self, pdf_file_name, language = None) -> ExtractionMessage:
+        service_url = 'http://localhost:5051'
+        data = { 'language': language }
+
+        with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', 'rb') as stream:
+            files = {'file': stream}
+            response = requests.post(service_url, files=files, data=data)
+
+        self.assertEqual(200, response.status_code)
+
+        with pdfplumber.open(io.BytesIO(response.content)) as pdf:
+            first_page = pdf.pages[0]
+            return first_page.extract_text();
+
+    def async_ocr(self, pdf_file_name, language = 'en') -> ExtractionMessage:
+        namespace = 'async_ocr'
+        service_url = 'http://localhost:5051'
+
+        with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', 'rb') as stream:
+            files = {'file': stream}
+            requests.post(f"{service_url}/upload/{namespace}", files=files)
+
+        queue = RedisSMQ(host='127.0.0.1', port='6479', qname="ocr_tasks")
+
+        queue.sendMessage().message('{"message_to_avoid":"to_be_written_in_log_file"}').execute()
+
+        task = Task(tenant=namespace, task='ocr', params=Params(filename=pdf_file_name, language=language))
+        queue.sendMessage().message(str(task.json())).execute()
+
+        extraction_message = self.get_redis_message()
+
+        response = requests.get(extraction_message.file_url)
+        self.assertEqual(200, response.status_code)
+
+        with pdfplumber.open(io.BytesIO(response.content)) as pdf:
+            first_page = pdf.pages[0]
+            return first_page.extract_text()
 
     @staticmethod
     def get_redis_message() -> ExtractionMessage:

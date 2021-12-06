@@ -1,6 +1,8 @@
 import sys
+import logging
 
-from fastapi import FastAPI, HTTPException, File, UploadFile
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form
+from typing import Optional
 from fastapi.responses import FileResponse
 
 from ServiceConfig import ServiceConfig
@@ -28,14 +30,14 @@ async def info():
 
 
 @app.post('/')
-async def ocr_pdf_sync(file: UploadFile = File(...)):
+async def ocr_pdf_sync(file: UploadFile = File(...), language: Optional[str] = Form('en')):
     filename = 'No file name'
     try:
         namespace = 'sync_pdfs'
         filename = file.filename
         pdf_file = PdfFile(namespace)
         pdf_file.save(pdf_file_name=filename, file=file.file.read())
-        processed_pdf_filepath = ocr_pdf(filename, namespace)
+        processed_pdf_filepath = ocr_pdf(filename, namespace, language)
         return FileResponse(path=processed_pdf_filepath, media_type='application/pdf')
     except Exception:
         message = f'Error processing {filename}'
