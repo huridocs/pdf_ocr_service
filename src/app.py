@@ -1,5 +1,4 @@
 import sys
-import logging
 
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from typing import Optional

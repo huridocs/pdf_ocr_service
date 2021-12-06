@@ -2,7 +2,6 @@ import os
 import json
 import io
 import shutil
-import logging
 import subprocess
 import time
 from unittest import TestCase
