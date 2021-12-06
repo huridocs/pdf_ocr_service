@@ -4,4 +4,4 @@ from typing import Optional
 
 class Params(BaseModel):
     filename: str
-    language: Optional[str] = 'en'
+    language: Optional[str] = "en"

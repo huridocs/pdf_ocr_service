@@ -13,13 +13,13 @@
 <!-- - rename venv to something meaningfull, ocr-pdf-service-venv ? -->
 <!-- - use config paths instead of repeating everywhere strings -->
 <!-- - test with language for sync endpoint !! -->
+<!-- - autoformatter -->
 
 - abstract somehow language support
 - decide which languages to support
 - test with a wider variety of PDFs
 - update README!!!!
 - info endpoint respond with languages available
-- autoformatter
 - divide dependencies into prod and dev requirements files
 - review which requirements are really required
 - why still docker_volumes has xml dir ?
