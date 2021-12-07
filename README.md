@@ -80,9 +80,10 @@ To add an OCR task to queue, a message should be sent to a `ocr_tasks` Redis que
 
 Python code: TODO: check python code!!!
 
+    from rsmq import RedisSMQ
     queue = RedisSMQ(host=[redis host], port=[redis port], qname='ocr_tasks', quiet=True)
     message_json = '{"tenant": "tenant_name", "task": "ocr", "params": {"filename": "pdf_file_name.pdf", "language": 'fr'}}'
-    message = queue.sendMessage(message_json).exceptions(False).execute()
+    queue.sendMessage().message(message_json).execute()
 
 3. Retrieve OCRed PDF
 
