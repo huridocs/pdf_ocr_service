@@ -113,7 +113,7 @@ If the service is running, the end point definitions can be founded in the follo
 
 The endpoints code can be found inside the file `./src/app.py`.
 
-The errors are logged in file `./data/service.log` (unless configuration points to a different file - see [Quick Start](#quick-start))
+The errors are logged in file `./data/service.log`.
 
 ## Queue processor
 
