@@ -7,8 +7,8 @@ A Docker-powered service for OCRing PDFs
 ## Dependencies and requirements
 
 - Redis server for managing queues
-- Docker ( [install](https://runnable.com/docker/getting-started/) )
-- Docker-compose ( [install](https://docs.docker.com/compose/install/) )
+- Docker ([install](https://runnable.com/docker/getting-started/))
+- Docker-compose ([install](https://docs.docker.com/compose/install/))
   - Note: On mac Docker-compose is installed with Docker
 
 ## Quick Start
