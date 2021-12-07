@@ -50,19 +50,11 @@ function remove_docker_images {
 }
 
 function start {
-if [ -z "$(docker ps -q --no-trunc | grep "$(docker-compose ps -q ocr)")" ]; then
-    docker-compose up --build "${@}"
-  else
-    echo "Containers already running"
-  fi
+  docker-compose up --build "${@}"
 }
 
 function start:testing {
-if [ -z "$(docker ps -q --no-trunc | grep "$(docker-compose ps -q ocr)")" ]; then
-    docker-compose --profile testing up --build "${@}"
-  else
-    echo "Containers already running"
-  fi
+  docker-compose --profile testing up --build "${@}"
 }
 
 function stop {
