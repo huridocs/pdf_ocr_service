@@ -20,6 +20,9 @@
 <!-- - review which requirements are really required -->
 
 - be able to use external Redis
+- `upload` route is returning `task registered` which is NOT true
+- cleanup (delete) downloaded PDF files?
+- README code does not include import RedisSMQ
 - setup production environment with auto restart ?
 - config logs path to be able to use /var/logs on production ?
 - change the PORT number default in order to be able to be installed along-side our other services in the same machine. Should we have a pattern for future services?
