@@ -17,7 +17,8 @@
 <!-- - update README!!!! -->
 <!-- - why still docker_volumes has xml dir ? -->
 
-- either make the PORT configurable, or change it in order to be able to be installed along-side our other services in the same machine. Should we have a pattern for future services?
+- change the PORT number default in order to be able to be installed along-side our other services in the same machine. Should we have a pattern for future services?
+- create `config.yml` with default values instead of explanation of creating the file
 - setup github CI with lint, formatting, tests ...
 - setup production environment with auto restart ?
 - make sure logs work
@@ -28,6 +29,7 @@
 - divide dependencies into prod and dev requirements files
 - review which requirements are really required
 - setup_venv needs to stop on error to avoid insalling local packages
+- allow upping the service without redis if you only want to use the sync method
 - Check this warnings on docker-compose up:
   ocr_1 | QueueAlreadyExists: Exception while processing CreateQueueCommand: Queue 'ocr_results' already exists
   ocr_1 | QueueAlreadyExists: Exception while processing CreateQueueCommand: Queue 'ocr_tasks' already exists
