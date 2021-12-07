@@ -64,7 +64,6 @@ To list all available commands just run `./run`, some useful commands:
 - [Retrieve OCRed PDF](#retrieve-ocred-pdf)
 - [Queue processor](#queue-processor)
 - [Service configuration](#service-configuration)
-- [Get service logs](#get-service-logs)
 - [Troubleshooting](#troubleshooting)
 
 ## Asynchronous OCR
