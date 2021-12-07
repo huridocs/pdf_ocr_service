@@ -20,13 +20,12 @@ WORKDIR /app
 COPY ./src ./src
 
 FROM base AS api
-WORKDIR /app
 WORKDIR /app/src
 COPY docker-compose.yml .
 ENV FLASK_APP app.py
 CMD gunicorn -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:5050
 
 FROM base AS ocr
-WORKDIR /app
+WORKDIR /app/src
 COPY docker-compose.yml .
-CMD python3 ./src/QueueProcessor.py
+CMD python3 QueueProcessor.py
