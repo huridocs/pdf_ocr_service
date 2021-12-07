@@ -16,8 +16,8 @@
 <!-- - info endpoint respond with languages available -->
 <!-- - update README!!!! -->
 <!-- - why still docker_volumes has xml dir ? -->
-<!-- - abstract somehow language support -->
 
+- either make the PORT configurable, or change it in order to be able to be installed along-side our other services in the same machine. Should we have a pattern for future services?
 - setup github CI with lint, formatting, tests ...
 - setup production environment with auto restart ?
 - make sure logs work
