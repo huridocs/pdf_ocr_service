@@ -17,7 +17,7 @@ Start the service:
 
     ./run start
 
-This script will start the service with default configurations. You can override default values creating file `./src/config.yml` with the following values:
+This script will start the service with default configurations. You can override default values with file `./src/config.yml` (you may need to create the file) with the following values:
 
 ```
 redis_host: localhost
@@ -32,25 +32,25 @@ A virtual env is needed for some of the development tasks
 
     ./run install_venv
 
-start the service for testing (with a redis server included)
+Start the service for testing (with a redis server included)
 
     ./run start:testing
 
-Check service is working and get general info and supported languages
+Check service is up and get general info on supported languages and other important information:
 
-    curl --silent localhost:5051/info
+    curl localhost:5051/info
 
-Test Ocr is working
+Test OCR is working (basic sync method)
 
-if language is not specified, english is the default
+curl -X POST -F 'file=@./src/test_files/sample-english.pdf' localhost:5051 --output english.pdf
 
-    curl -X POST -F 'file=@./src/test_files/sample-english.pdf' localhost:5051 --output english.pdf
-
-specify a language for better ocr on supported languages, check `localhost:5051/info`
+If language is not specified, english will be used by default. In order to specify a language for better OCR results:
 
     curl -X POST -F 'language=fr' -F 'file=@./src/test_files/sample-french.pdf' localhost:5051 --output french.pdf
 
-to list all available commands just run `./run`, some useful commands:
+Remember you can check supported languages on `localhost:5051/info`
+
+To list all available commands just run `./run`, some useful commands:
 
     ./run test
     ./run linter
@@ -59,55 +59,50 @@ to list all available commands just run `./run`, some useful commands:
 
 ## Contents
 
-- [Quick Start](#quick-start)
-- [Dependencies](#dependencies)
-- [How to use it asynchronously](#how-to-use-it-asynchronously)
+- [Asynchronous OCR](#asynchronous-ocr)
 - [HTTP server](#http-server)
+- [Retrieve OCRed PDF](#retrieve-ocred-pdf)
 - [Queue processor](#queue-processor)
 - [Service configuration](#service-configuration)
 - [Get service logs](#get-service-logs)
 - [Troubleshooting](#troubleshooting)
 
-## How to use it asynchronously
+## Asynchronous OCR
 
-1. Send PDF to OCR
+1. Upload PDF file to the OCR service
 
    curl -X POST -F 'file=@/PATH/TO/PDF/pdf_name.pdf' localhost:5051/upload/[namespace]
 
 ![Alt logo](readme_pictures/send_materials.png?raw=true "Send PDF to extract")
 
-2. Add OCR task
+2. Add OCR task to queue
 
-To add an ocr task, a message should be sent to a queue.
-params should include filename and optionally a language supported, check languages supported on `localhost:5051/info`
+To add an OCR task to queue, a message should be sent to a `ocr_tasks` Redis queue. Params should include filename and, optionally, a supported language.
 
-Python code:
+Python code: TODO: check python code!!!
 
     queue = RedisSMQ(host=[redis host], port=[redis port], qname='ocr_tasks', quiet=True)
     message_json = '{"tenant": "tenant_name", "task": "ocr", "params": {"filename": "pdf_file_name.pdf", "language": 'fr'}}'
     message = queue.sendMessage(message_json).exceptions(False).execute()
 
-![Alt logo](readme_pictures/extraction.png?raw=true "Add extraction task")
+3. Retrieve OCRed PDF
 
-3. Get OCRed pdf
-
-When the ocr task is done, a message is placed in the results queue:
+Upon completion of the OCR process, a message is placed in the `ocr_results` Redis queue. This response is, for now, using specific Uwazi terminology. To check if the process for a specific file has been completed:
 
     queue = RedisSMQ(host=[redis host], port=[redis port], qname='ocr_results', quiet=True)
     results_message = queue.receiveMessage().exceptions(False).execute()
 
     # The message.message contains the following information:
-    # {"tenant": "tenant_name",
-    # "task": "pdf_name.pdf",
-    # "success": true,
-    # "error_message": "",
-    # "file_url": "http://localhost:5051/processed_pdf/[namespace/tenant]/[pdf_name]"
-    # }
+    # {
+    #   "tenant": "namespace",
+    #   "task": "pdf_name.pdf",
+    #   "success": true,
+    #   "error_message": "",
+    #   "file_url": "http://localhost:5051/processed_pdf/[namespace]/[pdf_name]"
+    #   }
 
 
-    curl -X GET http://localhost:5051/processed_pdf/[namespace/tenant]/[pdf_name]
-
-![Alt logo](readme_pictures/get_paragraphs.png?raw=true "Get PDF")
+    curl -X GET http://localhost:5051/processed_pdf/[namespace]/[pdf_name]
 
 ## HTTP server
 
