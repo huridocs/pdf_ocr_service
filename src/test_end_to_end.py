@@ -49,7 +49,7 @@ class TestEndToEnd(TestCase):
     def test_async_ocr_error_handling(self):
         namespace = "end_to_end_test_error"
         pdf_file_name = "README.md"
-        service_url = "http://localhost:5051"
+        service_url = "http://127.0.0.1:5051"
 
         with open(f'{config.paths["app"]}/../README.md', "rb") as stream:
             files = {"file": stream}
@@ -72,7 +72,7 @@ class TestEndToEnd(TestCase):
         )
 
     def sync_ocr(self, pdf_file_name, language=None) -> ExtractionMessage:
-        service_url = "http://localhost:5051"
+        service_url = "http://127.0.0.1:5051"
         data = {"language": language}
 
         with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', "rb") as stream:
@@ -87,7 +87,7 @@ class TestEndToEnd(TestCase):
 
     def async_ocr(self, pdf_file_name, language="en") -> ExtractionMessage:
         namespace = "async_ocr"
-        service_url = "http://localhost:5051"
+        service_url = "http://127.0.0.1:5051"
 
         with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', "rb") as stream:
             files = {"file": stream}

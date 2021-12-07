@@ -41,7 +41,7 @@ class ServiceConfig:
 
         default_service_port = self.get_service_port()
 
-        self.service_host = self.get_parameter_from_yml("service_host", "localhost")
+        self.service_host = self.get_parameter_from_yml("service_host", "127.0.0.1")
         self.service_port = self.get_parameter_from_yml(
             "service_port", default_service_port
         )
@@ -140,7 +140,7 @@ class ServiceConfig:
             with open("docker-compose.yml", "r") as f:
                 docker_yml = yaml.safe_load(f)
                 services = list(docker_yml["services"].keys())
-                port = docker_yml["services"][services[0]]["ports"][0].split(":")[1]
+                port = docker_yml["services"][services[0]]["ports"][0].split(":")[0]
 
         return port
 
