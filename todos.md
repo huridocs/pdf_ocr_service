@@ -16,18 +16,19 @@
 <!-- - info endpoint respond with languages available -->
 <!-- - update README!!!! -->
 <!-- - why still docker_volumes has xml dir ? -->
+<!-- - test with a wider variety of PDFs -->
+<!-- - review which requirements are really required -->
 
+- be able to use external Redis
+- setup production environment with auto restart ?
+- config logs path to be able to use /var/logs on production ?
 - change the PORT number default in order to be able to be installed along-side our other services in the same machine. Should we have a pattern for future services?
 - create `config.yml` with default values instead of explanation of creating the file
 - setup github CI with lint, formatting, tests ...
-- setup production environment with auto restart ?
 - make sure logs work
-- config logs path to be able to use /var/logs on production ?
 - make sure works on mac
 - decide which languages to support
-- test with a wider variety of PDFs
 - divide dependencies into prod and dev requirements files
-- review which requirements are really required
 - setup_venv needs to stop on error to avoid insalling local packages
 - allow upping the service without redis if you only want to use the sync method
 - Check this warnings on docker-compose up:
