@@ -22,6 +22,7 @@
 - be able to use external Redis
 - `upload` route is returning `task registered` which is NOT true
 - cleanup (delete) downloaded PDF files?
+- unify logs into service.log, rename to ocr_pdf.log???
 - README code does not include import RedisSMQ
 - setup production environment with auto restart ?
 - config logs path to be able to use /var/logs on production ?
