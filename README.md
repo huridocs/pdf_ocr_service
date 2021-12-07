@@ -112,20 +112,19 @@ If the service is running, the end point definitions can be founded in the follo
 
     http://localhost:5051/docs
 
-The end points code can be founded inside the file `app.py`.
+The endpoints code can be found inside the file `./src/app.py`.
 
-The errors are reported to the file `docker_volume/service.log`, if the configuration is not changed (see [Get service logs](#get-service-logs))
+The errors are logged in file `./data/service.log` (unless configuration points to a different file - see [Quick Start](#quick-start))
 
 ## Queue processor
 
-The container `Queue processor` is coded using Python 3.9, and it is on charge of the communication with redis.
+The container `Queue processor` is coded using Python 3.9, and it is in charge of communications with the Redis queue.
 
-The code can be founded in the file `QueueProcessor.py` and it uses the library `RedisSMQ` to interact with the
-redis queues.
+The code can be found in the file `./src/QueueProcessor.py` and it uses the library `RedisSMQ` to interact with the Redis queues.
 
 ## Troubleshooting
 
-In MacOS, it can be used the following config.yml in order to access to the redis in localhost:
+In MacOS, the following `config.yml` can be used in order to access Redis in the host's localhost:
 
     redis_host: host.docker.internal
     redis_port: 6379
@@ -134,4 +133,4 @@ In MacOS, it can be used the following config.yml in order to access to the redi
 
 ### Issue: Error downloading pip wheel
 
-Solution: Change RAM memory used by the docker containers to 3Gb or 4Gb
+Solution: Change RAM memory available to the docker containers to 3Gb or 4Gb
