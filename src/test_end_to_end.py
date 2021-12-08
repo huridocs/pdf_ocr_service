@@ -24,7 +24,7 @@ class TestEndToEnd(TestCase):
         shutil.rmtree(config.paths["failed_pdfs"], ignore_errors=True)
 
     def setUpClass():
-        subprocess.run("./run start:testing -d --wait", shell=True)
+        subprocess.run("./run start:testing -d", shell=True)
         time.sleep(1)
 
     def tearDownClass():
