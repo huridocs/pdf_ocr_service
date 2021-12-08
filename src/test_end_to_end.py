@@ -110,6 +110,7 @@ class TestEndToEnd(TestCase):
 
         response = requests.get(extraction_message.file_url)
         self.assertEqual(200, response.status_code)
+        self.assertEqual(task.params, extraction_message.params)
 
         with pdfplumber.open(io.BytesIO(response.content)) as pdf:
             first_page = pdf.pages[0]
