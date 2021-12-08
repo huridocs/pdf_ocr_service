@@ -12,6 +12,7 @@ RUN apt-get update
 RUN apt-get install -y ocrmypdf
 RUN apt-get install -y tesseract-ocr-fra
 RUN apt-get install -y tesseract-ocr-spa
+RUN apt-get install -y tesseract-ocr-deu
 # Add more languages as needed
 
 RUN mkdir /app

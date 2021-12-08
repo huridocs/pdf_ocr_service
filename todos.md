@@ -18,9 +18,9 @@
 <!-- - why still docker_volumes has xml dir ? -->
 <!-- - test with a wider variety of PDFs -->
 <!-- - review which requirements are really required -->
+<!-- - be able to use external Redis -->
 
-- be able to use external Redis
-- `upload` route is returning `task registered` which is NOT true
+- `upload` route is returning `task registered` which is NOT true, should be something like `upload accepted`
 - cleanup (delete) downloaded PDF files?
 - unify logs into service.log, rename to ocr_pdf.log???
 - README code does not include import RedisSMQ
@@ -28,6 +28,7 @@
 - config logs path to be able to use /var/logs on production ?
 - change the PORT number default in order to be able to be installed along-side our other services in the same machine. Should we have a pattern for future services?
 - create `config.yml` with default values instead of explanation of creating the file
+- make sure tests use config for testing redis container
 - setup github CI with lint, formatting, tests ...
 - make sure logs work
 - make sure works on mac
