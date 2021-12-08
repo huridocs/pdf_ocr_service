@@ -63,7 +63,7 @@ async def upload_pdf(namespace, file: UploadFile = File(...)):
         filename = file.filename
         pdf_file = PdfFile(namespace)
         pdf_file.save(pdf_file_name=filename, file=file.file.read())
-        return "task registered"
+        return "File uploaded"
     except Exception:
         message = f"Error uploading pdf {filename}"
         logger.error(message, exc_info=1)
