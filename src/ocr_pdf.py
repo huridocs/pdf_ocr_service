@@ -34,6 +34,7 @@ def ocr_pdf(filename, namespace, language="en"):
             iso_to_tesseract[language],
             source_pdf_filepath,
             processed_pdf_filepath,
+            "--force-ocr",
         ]
     )
 

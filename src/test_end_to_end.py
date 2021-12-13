@@ -46,6 +46,10 @@ class TestEndToEnd(TestCase):
         ocr_text = self.async_ocr("sample-french.pdf", language="fr")
         self.assertEqual("Où  puis-je  m'en  procurer", ocr_text)
 
+    def test_async_ocr_already_ocred_file(self):
+        ocr_text = self.async_ocr("sample-already-ocred.pdf")
+        self.assertIn("This  is  some  real  text", ocr_text)
+
     def test_async_ocr_error_handling(self):
         namespace = "end_to_end_test_error"
         pdf_file_name = "README.md"
