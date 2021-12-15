@@ -14,6 +14,11 @@ RUN apt-get install -y tesseract-ocr-fra
 RUN apt-get install -y tesseract-ocr-spa
 RUN apt-get install -y tesseract-ocr-deu
 RUN apt-get install -y tesseract-ocr-ara
+RUN apt-get install -y tesseract-ocr-mya
+RUN apt-get install -y tesseract-ocr-hin
+RUN apt-get install -y tesseract-ocr-tam
+RUN apt-get install -y tesseract-ocr-tha
+RUN apt-get install -y tesseract-ocr-chi-sim
 # Add more languages as needed
 
 RUN mkdir /app
