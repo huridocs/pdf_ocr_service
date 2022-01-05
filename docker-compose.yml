@@ -2,18 +2,18 @@ version: "3"
 services:
   api:
     init: true
+    network_mode: host
     restart: unless-stopped
     user: "${USER_ID}:${GROUP_ID}"
     build:
       context: .
       dockerfile: Dockerfile
       target: api
-    ports:
-      - "5051:5050"
     volumes:
       - ./data:/app/data
   ocr:
     init: true
+    network_mode: host
     restart: unless-stopped
     user: "${USER_ID}:${GROUP_ID}"
     build:
@@ -25,10 +25,9 @@ services:
 
   redis:
     image: "redis:5.0.14"
+    network_mode: host
     restart: unless-stopped
     command: redis-server
-    ports:
-      - "6479:6379"
     environment:
       - REDIS_REPLICATION_MODE=master
     profiles:

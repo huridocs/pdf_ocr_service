@@ -36,10 +36,10 @@ class ServiceConfig:
         self.config_from_yml: Dict[str, any] = dict()
         self.read_configuration_from_yml()
 
-        self.redis_host = self.get_parameter_from_yml("redis_host", "redis")
+        self.redis_host = self.get_parameter_from_yml("redis_host", "localhost")
         self.redis_port = self.get_parameter_from_yml("redis_port", 6379)
 
-        default_service_port = self.get_service_port()
+        default_service_port = 5050
 
         self.service_host = self.get_parameter_from_yml("service_host", "127.0.0.1")
         self.service_port = self.get_parameter_from_yml(
@@ -132,18 +132,6 @@ class ServiceConfig:
             config_dict[option] = configuration_input
 
         self.write_configuration(config_dict)
-
-    @staticmethod
-    def get_service_port():
-        port = None
-        if os.path.exists("docker-compose.yml"):
-            with open("docker-compose.yml", "r") as f:
-                docker_yml = yaml.safe_load(f)
-                services = list(docker_yml["services"].keys())
-                port = docker_yml["services"][services[0]]["ports"][0].split(":")[0]
-
-        return port
-
 
 if __name__ == "__main__":
     config = ServiceConfig()
