@@ -53,13 +53,13 @@ class TestEndToEnd(TestCase):
     def test_async_ocr_error_handling(self):
         namespace = "end_to_end_test_error"
         pdf_file_name = "README.md"
-        service_url = "http://127.0.0.1:5051"
+        service_url = "http://127.0.0.1:5050"
 
         with open(f'{config.paths["app"]}/../README.md', "rb") as stream:
             files = {"file": stream}
             requests.post(f"{service_url}/upload/{namespace}", files=files)
 
-        queue = RedisSMQ(host="127.0.0.1", port="6479", qname="ocr_tasks")
+        queue = RedisSMQ(host="127.0.0.1", port="6379", qname="ocr_tasks")
         task = Task(tenant=namespace, task="ocr", params=Params(filename=pdf_file_name))
 
         queue.sendMessage().message(task.json()).execute()
@@ -76,7 +76,7 @@ class TestEndToEnd(TestCase):
         )
 
     def sync_ocr(self, pdf_file_name, language=None) -> ExtractionMessage:
-        service_url = "http://127.0.0.1:5051"
+        service_url = "http://127.0.0.1:5050"
         data = {"language": language}
 
         with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', "rb") as stream:
@@ -91,13 +91,13 @@ class TestEndToEnd(TestCase):
 
     def async_ocr(self, pdf_file_name, language="en") -> ExtractionMessage:
         namespace = "async_ocr"
-        service_url = "http://127.0.0.1:5051"
+        service_url = "http://127.0.0.1:5050"
 
         with open(f'{config.paths["app"]}/test_files/{pdf_file_name}', "rb") as stream:
             files = {"file": stream}
             requests.post(f"{service_url}/upload/{namespace}", files=files)
 
-        queue = RedisSMQ(host="127.0.0.1", port="6479", qname="ocr_tasks")
+        queue = RedisSMQ(host="127.0.0.1", port="6379", qname="ocr_tasks")
 
         queue.sendMessage().message(
             '{"message_to_avoid":"to_be_written_in_log_file"}'
@@ -122,7 +122,7 @@ class TestEndToEnd(TestCase):
 
     @staticmethod
     def get_redis_message() -> ExtractionMessage:
-        queue = RedisSMQ(host="127.0.0.1", port="6479", qname="ocr_results", quiet=True)
+        queue = RedisSMQ(host="127.0.0.1", port="6379", qname="ocr_results", quiet=True)
 
         for i in range(50):
             time.sleep(0.5)
