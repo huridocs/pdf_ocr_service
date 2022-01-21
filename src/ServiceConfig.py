@@ -133,6 +133,7 @@ class ServiceConfig:
 
         self.write_configuration(config_dict)
 
+
 if __name__ == "__main__":
     config = ServiceConfig()
     config.create_configuration()
