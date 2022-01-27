@@ -37,6 +37,12 @@ async def info():
     )
     return JSONResponse(content=content)
 
+@app.get("/error")
+async def error():
+    logger.error("This is a test error from the error endpoint")
+    raise HTTPException(
+        status_code=500, detail="This is a test error from the error endpoint"
+    )
 
 @app.post("/")
 async def ocr_pdf_sync(
