@@ -78,7 +78,7 @@ class ServiceConfig:
             return logger
 
         handler = graypy.GELFUDPHandler(
-            self.config_from_yml["graylog_ip"], 12201, localname="segmentation_server"
+            self.config_from_yml["graylog_ip"], 12201, localname="pdf_ocr_service"
         )
         logger.addHandler(handler)
         return logger
