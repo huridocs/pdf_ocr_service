@@ -108,7 +108,13 @@ class QueueProcessor:
 if __name__ == "__main__":
     try:
         sentry_sdk.init(
+<<<<<<< HEAD
             os.environ.get("SENTRY_OCR_DSN"),
+||||||| parent of 475a5e3 (Configure Sentry with env variables)
+            "https://31f2bc6fdc8a4f36bb4e464ec1237765@o1134623.ingest.sentry.io/6212895",
+=======
+            os.environ.get('SENTRY_OCR_DSN'),
+>>>>>>> 475a5e3 (Configure Sentry with env variables)
             traces_sample_rate=0.1,
             environment=os.environ.get("ENVIRONMENT", "development"),
             integrations=[RedisIntegration()],
