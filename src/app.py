@@ -43,10 +43,6 @@ try:
 except Exception:
     pass
 
-@app.get('/sentry')
-async def sentry():
-    raise Exception('Test sentry integration')
-
 @app.get("/info")
 async def info():
     logger.info("Ocr PDF info endpoint")
