@@ -1,3 +1,4 @@
+import os
 from time import sleep
 
 import redis
@@ -107,7 +108,7 @@ class QueueProcessor:
 if __name__ == "__main__":
     try:
         sentry_sdk.init(
-            "https://31f2bc6fdc8a4f36bb4e464ec1237765@o1134623.ingest.sentry.io/6212895",
+            os.environ.get('SENTRY_OCR_DSN'),
             traces_sample_rate=0.1,
             integrations=[RedisIntegration()]
     )
