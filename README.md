@@ -38,7 +38,7 @@ Start the service for testing (with a redis server included)
 
 Check service is up and get general info on supported languages and other important information:
 
-    curl localhost:5051/info
+    curl localhost:5050/info
 
 Test OCR is working (basic sync method)
 
