@@ -23,7 +23,7 @@ This script will start the service with default configurations. You can override
 redis_host: localhost
 redis_port: 6379
 service_host: localhost
-service_port: 5051
+service_port: 5050
 ```
 
 ## Development and testing
@@ -46,9 +46,9 @@ curl -X POST -F 'file=@./src/test_files/sample-english.pdf' localhost:5051 --out
 
 If language is not specified, english will be used by default. In order to specify a language for better OCR results:
 
-    curl -X POST -F 'language=fr' -F 'file=@./src/test_files/sample-french.pdf' localhost:5051 --output french.pdf
+    curl -X POST -F 'language=fr' -F 'file=@./src/test_files/sample-french.pdf' localhost:5050 --output french.pdf
 
-Remember you can check supported languages on `localhost:5051/info`
+Remember you can check supported languages on `localhost:5050/info`
 
 To list all available commands just run `./run`, some useful commands:
 
@@ -98,11 +98,11 @@ Upon completion of the OCR process, a message is placed in the `ocr_results` Red
     #   "task": "pdf_name.pdf",
     #   "success": true,
     #   "error_message": "",
-    #   "file_url": "http://localhost:5051/processed_pdf/[namespace]/[pdf_name]"
+    #   "file_url": "http://localhost:5050/processed_pdf/[namespace]/[pdf_name]"
     #   }
 
 
-    curl -X GET http://localhost:5051/processed_pdf/[namespace]/[pdf_name]
+    curl -X GET http://localhost:5050/processed_pdf/[namespace]/[pdf_name]
 
 ## HTTP server
 
@@ -110,7 +110,7 @@ The container `HTTP server` is coded using Python 3.9 and uses the [FastApi](htt
 
 If the service is running, the end point definitions can be founded in the following url:
 
-    http://localhost:5051/docs
+    http://localhost:5050/docs
 
 The endpoints code can be found inside the file `./src/app.py`.
 
@@ -129,7 +129,7 @@ In MacOS, the following `config.yml` can be used in order to access Redis in the
     redis_host: host.docker.internal
     redis_port: 6379
     service_host: localhost
-    service_port: 5051
+    service_port: 5050
 
 ### Issue: Error downloading pip wheel
 
