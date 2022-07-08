@@ -11,6 +11,9 @@ services:
       target: api
     volumes:
       - ./data:/app/data
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - SENTRY_OCR_DSN=${SENTRY_OCR_DSN:-}
   ocr:
     init: true
     network_mode: host
@@ -22,6 +25,9 @@ services:
       target: ocr
     volumes:
       - ./data:/app/data
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - SENTRY_OCR_DSN=${SENTRY_OCR_DSN:-}
 
   redis:
     image: "redis:5.0.14"
