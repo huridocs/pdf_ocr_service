@@ -24,13 +24,14 @@ logger.info("Ocr PDF service has started")
 
 try:
     sentry_sdk.init(
-        os.environ.get('SENTRY_OCR_DSN'),
+        os.environ.get("SENTRY_OCR_DSN"),
         traces_sample_rate=0.1,
-        environment=os.environ.get('ENVIRONMENT', 'development')
-)
+        environment=os.environ.get("ENVIRONMENT", "development"),
+    )
     app.add_middleware(SentryAsgiMiddleware)
 except Exception:
     pass
+
 
 @app.get("/info")
 async def info():

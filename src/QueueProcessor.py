@@ -108,11 +108,11 @@ class QueueProcessor:
 if __name__ == "__main__":
     try:
         sentry_sdk.init(
-            os.environ.get('SENTRY_OCR_DSN'),
+            os.environ.get("SENTRY_OCR_DSN"),
             traces_sample_rate=0.1,
-            environment=os.environ.get('ENVIRONMENT', 'development'),
-            integrations=[RedisIntegration()]
-    )
+            environment=os.environ.get("ENVIRONMENT", "development"),
+            integrations=[RedisIntegration()],
+        )
     except Exception:
         pass
 
