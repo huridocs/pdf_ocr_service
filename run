@@ -57,6 +57,10 @@ function start:testing {
   docker-compose --profile testing up --build "${@}"
 }
 
+function start:local {
+  docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build "${@}"
+}
+
 function stop {
   docker-compose --profile testing stop
 }

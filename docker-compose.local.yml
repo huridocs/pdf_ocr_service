@@ -1,0 +1,12 @@
+version: "3"
+services:
+  api:
+    network_mode: bridge
+    ports:
+      - 5050:5050
+  ocr:
+    network_mode: bridge
+  redis:
+    network_mode: bridge
+    ports: 
+      - 6379:6379

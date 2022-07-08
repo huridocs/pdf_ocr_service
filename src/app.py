@@ -1,9 +1,13 @@
+import os
 import sys
 
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from typing import Optional
 from fastapi.responses import FileResponse, JSONResponse
 import subprocess
+
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+import sentry_sdk
 
 from ServiceConfig import ServiceConfig
 from PdfFile import PdfFile
@@ -17,6 +21,16 @@ logger = config.get_logger("service")
 app = FastAPI()
 
 logger.info("Ocr PDF service has started")
+
+try:
+    sentry_sdk.init(
+        os.environ.get("SENTRY_OCR_DSN"),
+        traces_sample_rate=0.1,
+        environment=os.environ.get("ENVIRONMENT", "development"),
+    )
+    app.add_middleware(SentryAsgiMiddleware)
+except Exception:
+    pass
 
 
 @app.get("/info")
