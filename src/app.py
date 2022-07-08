@@ -24,8 +24,9 @@ logger.info("Ocr PDF service has started")
 
 try:
     sentry_sdk.init(
-        os.environ.get('https://31f2bc6fdc8a4f36bb4e464ec1237765@o1134623.ingest.sentry.io/6212895'),
+        os.environ.get('SENTRY_OCR_DSN'),
         traces_sample_rate=0.1,
+        environment=os.environ.get('ENVIRONMENT', 'development')
 )
     app.add_middleware(SentryAsgiMiddleware)
 except Exception:
