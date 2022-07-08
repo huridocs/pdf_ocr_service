@@ -1,9 +1,12 @@
+import os
 from time import sleep
 
 import redis
 from pydantic import ValidationError
 from rsmq.consumer import RedisSMQConsumer
 from rsmq import RedisSMQ
+from sentry_sdk.integrations.redis import RedisIntegration
+import sentry_sdk
 
 from ServiceConfig import ServiceConfig
 from ExtractionMessage import ExtractionMessage
@@ -103,5 +106,14 @@ class QueueProcessor:
 
 
 if __name__ == "__main__":
+    try:
+        sentry_sdk.init(
+            os.environ.get('https://31f2bc6fdc8a4f36bb4e464ec1237765@o1134623.ingest.sentry.io/6212895'),
+            traces_sample_rate=0.1,
+            integrations=[RedisIntegration()]
+    )
+    except Exception:
+        pass
+
     redis_tasks_processor = QueueProcessor()
     redis_tasks_processor.subscribe_to_extractions_tasks_queue()
