@@ -31,7 +31,7 @@ FROM base AS api
 WORKDIR /app/src
 COPY docker-compose.yml .
 ENV FLASK_APP app.py
-CMD gunicorn -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:5050
+CMD gunicorn -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:5050 --timeout 300
 
 FROM base AS ocr
 WORKDIR /app/src
