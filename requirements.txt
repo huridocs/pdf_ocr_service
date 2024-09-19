@@ -1,16 +1,17 @@
+git+https://github.com/huridocs/queue-processor@bab1f4419b0768df518d06795afd5df2ba0e331c
+
 aiofiles==0.6.0
 fastapi~=0.67.0
 graypy~=2.1.0
 gunicorn==20.1.0
 pydantic~=1.8.2
-PyRSMQ==0.4.5
 python-multipart==0.0.5
-PyYAML~=5.4.1
-redis~=3.5.3
 requests~=2.26.0
-uvicorn==0.20.0
 
+uvicorn==0.20.0
 flake8==6.0.0
 pdfplumber==0.7.6
 black==23.1.0
 sentry-sdk==1.15.0
+
+PyYAML==6.0.2

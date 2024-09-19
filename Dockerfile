@@ -1,14 +1,7 @@
 FROM python:3.9-slim-bullseye AS base
 
-ENV VIRTUAL_ENV=/opt/venv
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
 RUN apt-get update
+RUN apt-get install -y git
 RUN apt-get install -y ocrmypdf
 RUN apt-get install -y tesseract-ocr-fra
 RUN apt-get install -y tesseract-ocr-spa
@@ -19,6 +12,15 @@ RUN apt-get install -y tesseract-ocr-hin
 RUN apt-get install -y tesseract-ocr-tam
 RUN apt-get install -y tesseract-ocr-tha
 RUN apt-get install -y tesseract-ocr-chi-sim
+
+ENV VIRTUAL_ENV=/opt/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+COPY requirements.txt requirements.txt
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
 # Add more languages as needed
 
 RUN mkdir /app
