@@ -2,7 +2,6 @@ import os
 import json
 import io
 import shutil
-import subprocess
 import time
 from unittest import TestCase
 import pdfplumber
