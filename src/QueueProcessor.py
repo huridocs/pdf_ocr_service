@@ -1,11 +1,6 @@
 import os
-from time import sleep
-
-import redis
 from pydantic import ValidationError
 from queue_processor.QueueProcessor import QueueProcessor
-from rsmq.consumer import RedisSMQConsumer
-from rsmq import RedisSMQ
 from sentry_sdk.integrations.redis import RedisIntegration
 import sentry_sdk
 

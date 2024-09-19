@@ -23,13 +23,6 @@ class TestEndToEnd(TestCase):
         shutil.rmtree(config.paths["processed_pdfs"], ignore_errors=True)
         shutil.rmtree(config.paths["failed_pdfs"], ignore_errors=True)
 
-    def setUpClass():
-        subprocess.run("./run start:testing -d", shell=True)
-        time.sleep(1)
-
-    def tearDownClass():
-        subprocess.run("./run stop", shell=True)
-
     def test_sync_ocr(self):
         ocr_text = self.sync_ocr("sample-english.pdf")
         self.assertEqual("Test  text  OCR", ocr_text)
