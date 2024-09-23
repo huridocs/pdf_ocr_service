@@ -4,7 +4,7 @@ from queue_processor.QueueProcessor import QueueProcessor
 from sentry_sdk.integrations.redis import RedisIntegration
 import sentry_sdk
 
-from ServiceConfig import ServiceConfig, QUEUES_NAMES
+from ServiceConfig import ServiceConfig
 from ExtractionMessage import ExtractionMessage
 
 from Task import Task
