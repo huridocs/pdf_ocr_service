@@ -16,8 +16,6 @@ PDF_SOURCES_PATH = f"{DATA_PATH}/source_pdfs"
 PDF_PROCESSED_PATH = f"{DATA_PATH}/processed_pdfs"
 PDF_FAILED = f"{DATA_PATH}/failed_pdfs"
 
-QUEUES_NAMES = os.environ.get("QUEUES_NAMES", "ocr")
-
 
 class ServiceConfig:
     def __init__(self):
@@ -45,6 +43,7 @@ class ServiceConfig:
             "service_port", default_service_port
         )
         self.service_url = f"http://{self.service_host}:{self.service_port}"
+        self.queues_names = self.get_parameter_from_yml("queues_names", "ocr").split()
 
     def get_parameter_from_yml(self, parameter_name: str, default: any):
         if parameter_name in self.config_from_yml:

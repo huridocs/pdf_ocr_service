@@ -68,8 +68,10 @@ if __name__ == "__main__":
 
     service_config = ServiceConfig()
     logger = service_config.get_logger("redis_tasks")
-    queues_names = QUEUES_NAMES.split(" ")
     queue_processor = QueueProcessor(
-        service_config.redis_host, service_config.redis_port, queues_names, logger
+        service_config.redis_host,
+        service_config.redis_port,
+        service_config.queues_names,
+        logger,
     )
     queue_processor.start(process)
